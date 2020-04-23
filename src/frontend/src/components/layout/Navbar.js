@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { logoutUser } from "../../actions/authActions";
+// import { connect } from "react-redux";
+// import PropTypes from "prop-types";
+// import { logoutUser } from "../../actions/authActions";
 
 class Navbar extends Component {
-  onLogoutClick = (e) => {
-    e.preventDefault();
-    this.props.logoutUser();
-  };
+  // onLogoutClick = (e) => {
+  //   e.preventDefault();
+  //   this.props.logoutUser();
+  // };
 
   render() {
     return (
@@ -25,7 +25,7 @@ class Navbar extends Component {
               <i className="material-icons green-text">favorite</i>
               Cov-Connect
             </Link>
-            {this.props.auth.isAuthenticated ? (
+            {/* {this.props.auth.isAuthenticated ? (
               <button
                 style={{
                   width: "150px",
@@ -39,7 +39,7 @@ class Navbar extends Component {
               >
                 Logout
               </button>
-            ) : null}
+            ) : null} */}
           </div>
         </nav>
       </div>
@@ -47,11 +47,9 @@ class Navbar extends Component {
   }
 }
 
-Navbar.propTypes = {
-  logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-};
+// Navbar.propTypes = {
+// logoutUser: PropTypes.func.isRequired,
+//   auth: PropTypes.object.isRequired,
+// };
 
-const mapStateToProps = (state) => ({ auth: state.auth });
-
-export default connect(mapStateToProps, { logoutUser })(Navbar);
+export default Navbar;

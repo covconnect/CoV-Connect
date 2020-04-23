@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 
 import Sidebar from "../layout/Sidebar";
 import sendMessage from "../pages/sendMessage";
-import addPatient from "../pages/addPatient";
 import aboutUs from "../pages/aboutUs";
 import DashboardHome from "../pages/DashboardHome";
 
