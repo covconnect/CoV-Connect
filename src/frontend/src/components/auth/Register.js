@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { registerUser } from "../../actions/authActions";
+import { registerUser, validateEmail, validatePassword } from "../../actions/authActions";
 import classnames from "classnames";
-
 
 class Register extends Component
 {
@@ -17,7 +16,7 @@ class Register extends Component
                 email: "",
                 password: "",
                 password2: "",
-                errors: {}
+                errors: {},
             };
     }
 
@@ -42,13 +41,20 @@ class Register extends Component
     onSubmit = e =>
     {
         e.preventDefault();
+        this.props.validateEmail(this.state.email)
+        this.props.validatePassword(this.state.password, this.state.password2)
+
+        if (Object.keys(this.state.errors).length){
+            // Could add scroll to first input with error
+            return null;
+        }
+
         const newUser = {
             name: this.state.name,
             email: this.state.email,
             password: this.state.password,
             password2: this.state.password2
         };
-
         this.props.registerUser(newUser, this.props.history);
     };
 
@@ -150,4 +156,4 @@ Register.propTypes = {
 
 const mapStateToProps = state => ({auth: state.auth, errors: state.errors});
 
-export default connect(mapStateToProps, { registerUser })(withRouter(Register));
+export default connect(mapStateToProps, { registerUser, validatePassword, validateEmail })(withRouter(Register));
