@@ -8,6 +8,7 @@ import sendMessage from "../pages/sendMessage";
 import SentMessage from "../pages/SentMessage";
 import aboutUs from "../pages/aboutUs";
 import DashboardHome from "../pages/DashboardHome";
+import DashboardHomeAdmin from '../pages/DashboardHomeAdmin';
 
 function Dashboard() {
   // const items = [
@@ -71,6 +72,9 @@ function Dashboard() {
     },
   ];
 
+
+  // <Route exact path="/" component={DashboardHome}/>
+
   return (
     <HashRouter>
       <div>
@@ -79,7 +83,7 @@ function Dashboard() {
         </div>
         <div className="container valign-wrapper" style={{ paddingTop: 32 }}>
           <div className="row">
-            <Route exact path="/" component={DashboardHome}/>
+            <Route exact path="/" component={DashboardHomeAdmin}/>
             <Route path="/sendMessage" component={sendMessage}/>
             <Route path="/sentMessage" component={SentMessage}/>
             {/* <Route path="/addPatient" component={addPatient} /> */}

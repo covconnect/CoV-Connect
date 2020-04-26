@@ -3,8 +3,8 @@ import {SET_CURRENT_USER, USER_LOADING} from "../actions/types";
 
 const isEmpty = require("is-empty");
 const initialState = {
-    isAuthenticated: false,
-    user: {},
+    isAuthenticated: true,
+    user: { id: 123, name: 'admin1', type: 'admin'},
     loading: false
 };
 
