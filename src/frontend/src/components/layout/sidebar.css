@@ -1,11 +1,18 @@
 .bm-menu {
 }
 
+.bm-menu-wrap {
+  bottom: 0;
+  top: 56px;
+  height: auto !important;
+}
+
 .bm-item-list {
   background: #fafafa;
   list-style: none;
   height: auto !important;
   min-height: 100%;
+  padding-bottom: 16px;
 }
 
 .bm-item {
