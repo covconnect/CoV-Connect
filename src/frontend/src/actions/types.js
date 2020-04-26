@@ -3,3 +3,6 @@ export const USER_LOADING = "USER_LOADING";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 export const VALIDATION_ERROR = "VALIDATION_ERROR"
 export const CLEAR_ERROR = "CLEAR_ERROR"
+export const SET_MESSAGES = 'SET_MESSAGES';
+export const SET_PATIENTS = 'SET_PATIENTS';
+export const SET_HOSPITALS = 'SET_HOSPITALS';

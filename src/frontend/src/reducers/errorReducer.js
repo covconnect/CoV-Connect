@@ -4,7 +4,7 @@ import { GET_ERRORS, VALIDATION_ERROR, CLEAR_ERROR } from "../actions/types";
 const initialState = {};
 
 
-export default function(state = initialState, action)
+export default function errorReducer(state = initialState, action)
 {
     switch (action.type)
     {
