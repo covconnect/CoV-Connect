@@ -23,18 +23,22 @@ function Sidebar({ items }) {
         {items.map(({ title, contents }) => (
           <div className="hamburger-nav">
             <span className="bm-title">{title}</span>
-            {contents.map(({ destination, label }) => (
-              <NavLink
-                key={label}
-                className="menu-item"
-                to={destination}
-                style={{
-                  cursor: "pointer",
-                }}
-              >
-                {label}
-              </NavLink>
-            ))}{" "}
+            <ul className="bm-nav-list">
+              {contents.map(({ destination, label }) => (
+                <li className="bm-nav-list-item">
+                  <NavLink
+                    key={label}
+                    className="menu-item"
+                    to={destination}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    {label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
         <Logout />

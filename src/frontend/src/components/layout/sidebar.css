@@ -21,6 +21,13 @@
   color: #333;
 }
 
+.bm-nav-list {
+}
+
+.bm-nav-list-item {
+  float: none;
+}
+
 .menu-item {
   display: block;
   padding-left: 24px;
