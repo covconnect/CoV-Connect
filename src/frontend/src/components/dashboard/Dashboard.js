@@ -8,6 +8,7 @@ import SentMessage from "../pages/SentMessage";
 import aboutUs from "../pages/aboutUs";
 import DashboardHome from "../pages/DashboardHome";
 import Hospitals from "../pages/Hospitals";
+import ManageMessages from "../pages/ManageMessages";
 import { fetchHospitals } from '../../actions/hospitalActions';
 import { fetchMessages } from '../../actions/messageActions';
 import { fetchPatients } from '../../actions/patientActions';
@@ -80,13 +81,14 @@ function Dashboard() {
           <Sidebar items={sideBarItems} left />
         </div>
         <div className="container valign-wrapper" style={{ paddingTop: 32 }}>
-          <div className="row">
+          <div className="row w-100">
             <Route exact path="/" component={DashboardHome}/>
             <Route path="/sendMessage" component={sendMessage}/>
             <Route path="/sentMessage" component={SentMessage}/>
             {/* <Route path="/addPatient" component={addPatient} /> */}
             <Route path="/aboutUs" component={aboutUs}/>
             <Route path="/hospitals" component={Hospitals}/>
+            <Route path="/manageMessages" component={ManageMessages}/>
           </div>
         </div>
       </div>
