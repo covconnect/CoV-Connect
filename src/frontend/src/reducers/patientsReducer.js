@@ -8,7 +8,7 @@ export default function patientsReduce(state = initialState, action)
   switch (action.type)
   {
     case SET_PATIENTS:
-      return action.payload;
+      return action.payload || [];
     default:
       return state;
   }

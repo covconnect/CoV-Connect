@@ -63,7 +63,7 @@ function SendMessage() {
         fetchMessages().then(({ data }) => {
           dispatch({
             type: SET_MESSAGES,
-            payload: data,
+            payload: data.messages,
           });
 
           doneSubmitting(false);
@@ -75,8 +75,6 @@ function SendMessage() {
       doneSubmitting(err.message);
     });
   }
-
-  console.log(state.errorMessage);
 
   return (
     <div className="valign-wrapper">

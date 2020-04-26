@@ -54,19 +54,19 @@ function AddPatientForm() {
       hospital_id: state.selectedHospital.value
     }).then((res) => {
       if(res.status === 200) {
-        setState({successMessage: res.data.message});
+        setState({ ...state, successMessage: res.data.message});
         clearFields(true);
 
         fetchPatients().then(({ data }) => dispatch({
           type: SET_PATIENTS,
-          payload: data,
+          payload: data.patients,
         }));
       } else {
-        setState({errorMessage: res.data.message})
+        setState({ ...state, errorMessage: res.data.message})
         clearFields(false);
       }
     }).catch((err) => {
-      setState({errorMessage: err.message});
+      setState({ ...state, errorMessage: err.message});
       clearFields(false);
     });
   }
@@ -95,7 +95,7 @@ function AddPatientForm() {
             <Select
               isSearchable={state.isSearchable}
               value={selectedHospital}
-              onChange={selectedHospital => setState({ selectedHospital })}
+              onChange={selectedHospital => setState({ ...state, selectedHospital })}
               options={hospitalList}
               placeholder="Select Hospital"
             />
