@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { slide as Menu } from 'react-burger-menu';
 import Logout from "./Logout.js";
 import './sidebar.css';
@@ -16,11 +17,53 @@ import './sidebar.css';
       },
     }
 */
+
+const userSection = {
+  title: "Messages",
+  contents: [
+    {
+      destination: "/sendMessage",
+      label: "Send A Message",
+    },
+    {
+      destination: "/sentMessage",
+      label: "Sent Messages",
+    },
+  ],
+}
+
+const adminSection = {
+  title: 'Admin',
+  contents: [{
+    destination: '/hospitals',
+    label: 'Manage Hospitals',
+  }],
+};
+
+const hospitalAdminSection = {
+  title: 'Messages',
+  contents: [{
+    destination: '/manageMessages',
+    label: 'Manage Messages',
+  }],
+}
+
 function Sidebar({ items }) {
+  const { user } = useSelector(state => state.auth);
+  const { type } = user;
+  const allItems = useMemo(() => {
+    switch (type) {
+      case 'admin': return [userSection, hospitalAdminSection, ...items, adminSection];
+      case 'hospital_admin': return [hospitalAdminSection, ...items];
+      case 'user':
+      default: return [userSection, ...items];
+    }
+  }, [items, type]);
+
   return (
     <div>
       <Menu>
-        {items.map(({ title, contents }) => (
+        {allItems.map(({ title, contents }) => (
           <div className="hamburger-nav" key={title}>
             <span className="bm-title">{title}</span>
             <ul className="bm-nav-list">

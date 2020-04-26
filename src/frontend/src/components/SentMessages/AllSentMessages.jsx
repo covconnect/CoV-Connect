@@ -11,6 +11,7 @@ import _sortBy from 'lodash/sortBy';
 const STATUSES = [
   'Delivered',
   'Processing',
+  'Cancelled',
 ];
 
 function getPatientNameFromMessage(msg, patients) {

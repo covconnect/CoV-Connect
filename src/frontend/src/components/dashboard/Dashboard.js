@@ -7,6 +7,7 @@ import sendMessage from "../pages/sendMessage";
 import SentMessage from "../pages/SentMessage";
 import aboutUs from "../pages/aboutUs";
 import DashboardHome from "../pages/DashboardHome";
+import Hospitals from "../pages/Hospitals";
 import { fetchHospitals } from '../../actions/hospitalActions';
 import { fetchMessages } from '../../actions/messageActions';
 import { fetchPatients } from '../../actions/patientActions';
@@ -31,19 +32,6 @@ function Dashboard() {
   }, [initialLoad, dispatch])
 
   const sideBarItems = [
-    {
-      title: "Messages",
-      contents: [
-        {
-          destination: "/sendMessage",
-          label: "Send A Message",
-        },
-        {
-          destination: "/sentMessage",
-          label: "All Sent Messages",
-        },
-      ],
-    },
     {
       title: "Survivor Stories",
       contents: [
@@ -98,6 +86,7 @@ function Dashboard() {
             <Route path="/sentMessage" component={SentMessage}/>
             {/* <Route path="/addPatient" component={addPatient} /> */}
             <Route path="/aboutUs" component={aboutUs}/>
+            <Route path="/hospitals" component={Hospitals}/>
           </div>
         </div>
       </div>

@@ -18,7 +18,7 @@ export const registerUser = (userData, history) => dispatch =>
         );
 };
 
-// clear error 
+// clear error
 export const clearError = (input) => dispatch => {
     dispatch({
         type: CLEAR_ERROR,
@@ -41,11 +41,11 @@ export const validateEmail = value => dispatch => {
     clearError('email');
 }
 
-// Validate password 
-export const validatePassword = (pw1, pw2) => dispatch => { 
+// Validate password
+export const validatePassword = (pw1, pw2) => dispatch => {
     // Empty fields handled by registerUser
     if(pw1.length === 0 || pw2.length === 0) return null;
-    
+
     const isSamePassword = pw1 === pw2;
     if(!isSamePassword){
         return dispatch({
