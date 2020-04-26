@@ -1,0 +1,17 @@
+assume you already have npm installed
+
+1.) cloned the project through github desktop
+2.) do npm isntall on root, frontend and backend
+3.)install mongodb community server as windows service(after install mongod.exe will be running automatically)
+4.) go to mongo db install folder, click on mongo.exe, cmd window will start. 
+    type
+    use covconnect *enter*
+    then
+    db.createUser({user: "covconnectUser", pwd: "<mongodb_password>", roles: [{ role: "readWrite", db: "covconnect" }]})
+    replace <mongodb_password> with your preference
+    then press enter
+5.) go to config.json in the backend folder, replace <mongodb_password> with what you typed in step4
+6.)check the port as well, you can find it in the mongo cmd window near the top, make sure the port in config is the same
+7.)npm start on root project to start both front and backend
+8.)if all goes well yuo will be able to register a dummy account and use that to log in
+
