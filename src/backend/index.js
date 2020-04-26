@@ -4,12 +4,25 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
-const config = JSON.parse(fs.readFileSync("./config/config.json"));
+const db_host = "MONGODB_HOST" in process.env ? process.env.MONGODB_HOST : "localhost";
+const db_port = "MONGODB_PORT" in process.env ? process.env.MONGODB_PORT : "27017";
+const db_name = "MONGODB_NAME" in process.env ? process.env.MONGODB_NAME : "covconnect";
+const db_user = "MONGODB_USER" in process.env ? process.env.MONGODB_USER : "covconnectUser";
+const db_pass = process.env.MONGODB_PASSWORD;
+const sv_host = "SERVER_HOST" in process.env ? process.env.SERVER_HOST : "localhost";
+const sv_port = "SERVER_PORT" in process.env ? process.env.SERVER_PORT : "8080";
+const jwt_secret = process.env.JWT_SECRET;
+
+if(null in [jwt_secret, db_pass])
+{
+    console.log("Mandatory environment variables: [JWT_SECRET, MONGODB_PASSWORD]")
+    process.exit(1);
+}
 
 const common = require("./controller/common");
-common.setSecret(config.secret);
+common.setSecret(jwt_secret);
 
-const dbRoute = "mongodb://" + config.database.host + ":" + config.database.port + "/" + config.database.database;
+const dbRoute = "mongodb://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name;
 
 mongoose.connect(dbRoute, {useUnifiedTopology: true, useNewUrlParser: true, 'useCreateIndex': true});
 
@@ -26,11 +39,10 @@ app.use(bodyParser.json());
 require("./routes/api")(app);
 
 app.listen(
-    config.server.port, config.server.host,
+    sv_port, sv_host,
         () =>
         {
-            console.log("Listening on host: " + config.server.host +
-                        " and port: " + config.server.port);
+            console.log("Listening on host: " + sv_host + " and port: " + sv_port);
         });
 
 module.exports = app;
