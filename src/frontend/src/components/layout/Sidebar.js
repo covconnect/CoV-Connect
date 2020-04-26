@@ -21,13 +21,12 @@ function Sidebar({ items }) {
     <div>
       <Menu>
         {items.map(({ title, contents }) => (
-          <div className="hamburger-nav">
+          <div className="hamburger-nav" key={title}>
             <span className="bm-title">{title}</span>
             <ul className="bm-nav-list">
               {contents.map(({ destination, label }) => (
-                <li className="bm-nav-list-item">
+                <li className="bm-nav-list-item" key={label}>
                   <NavLink
-                    key={label}
                     className="menu-item"
                     to={destination}
                     style={{

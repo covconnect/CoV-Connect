@@ -1,33 +1,44 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import moment from 'moment';
 import _filter from 'lodash/filter';
 import _find from 'lodash/find';
 import _map from 'lodash/map';
+import _sortBy from 'lodash/sortBy';
 
 const STATUSES = [
   'Delivered',
   'Processing',
 ];
 
+function getPatientNameFromMessage(msg, patients) {
+  try {
+    return _find(patients, ({ patient_details }) => patient_details.id === msg.patient_id).patient_details.name
+  } catch (err) {
+    return 'Patient Name Unkown';
+  }
+}
+
 function AllSentMessages() {
   const [tab, setTab] = useState(0);
   const messages = useSelector(state => state.messages);
   const patients = useSelector(state => state.patients);
-  const allMessages = _map([], (msg) => ({
-    time: moment(msg.timestamp).format('mm-dd-yyyy hh:mma'),
-    patientName: _find(patients, ['id', msg.patient_id]).name,
+  const allMessages = _map(_sortBy(messages, 'createAt'), (msg) => ({
+    id: msg._id,
+    time: moment(msg.createdAt).format('MM-DD-YYYY hh:mma'),
+    patientName: getPatientNameFromMessage(msg, patients),
     status: STATUSES[msg.status],
   }))
   const deliveredMessages = _filter(allMessages, ['status', STATUSES[0]]);
 
-  function renderTab() {
+  function getMessages() {
     if (tab === 0) {
-      return <div>Delivered: {JSON.stringify(allMessages)}</div>
+      return allMessages;
     }
 
-    return <div>Delivered: {JSON.stringify(deliveredMessages)}</div>
+    return deliveredMessages;
   }
 
   return (
@@ -43,12 +54,10 @@ function AllSentMessages() {
           </div>
         </div>
 
-
-
-        <div class="row">
-          <div class="col s12">
-            <ul class="tabs">
-              <li class="tab col s6">
+        <div className="row">
+          <div className="col s12">
+            <ul className="tabs">
+              <li className="tab col s6">
                 <button
                   onClick={() => setTab(0)}
                   className={classnames(['tab-node', { active: tab === 0 }])}
@@ -56,7 +65,7 @@ function AllSentMessages() {
                   All ({allMessages.length})
                 </button>
               </li>
-              <li class="tab col s6">
+              <li className="tab col s6">
                 <button
                   onClick={() => setTab(1)}
                   className={classnames(['tab-node', { active: tab === 1 }])}
@@ -67,12 +76,30 @@ function AllSentMessages() {
             </ul>
           </div>
           <div className="col s12">
-            {renderTab()}
+            <table>
+              <thead>
+                <tr>
+                  <th>Sent Time</th>
+                  <th>Patient Name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {_map(getMessages(), (msg) => (
+                  <tr key={msg.id}>
+                    <td>{msg.time}</td>
+                    <td>{msg.patientName}</td>
+                    <td>{msg.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="p-8"></div>
+
+            <Link to='/sendMessage' className="btn wave-effect hoverable blue">New Message</Link>
           </div>
         </div>
-
-
-
       </div>
     </div>
   );

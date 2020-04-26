@@ -7,7 +7,7 @@ import sendMessage from "../pages/sendMessage";
 import SentMessage from "../pages/SentMessage";
 import aboutUs from "../pages/aboutUs";
 import DashboardHome from "../pages/DashboardHome";
-import { createHospital, fetchHospitals } from '../../actions/hospitalActions';
+import { fetchHospitals } from '../../actions/hospitalActions';
 import { fetchMessages } from '../../actions/messageActions';
 import { fetchPatients } from '../../actions/patientActions';
 import { SET_HOSPITALS, SET_MESSAGES, SET_PATIENTS } from '../../actions/types';
@@ -24,9 +24,9 @@ function Dashboard() {
 
   useEffect(() => {
     if (initialLoad) {
-      fetchHospitals().then(({ data }) => dispatch({ type: SET_HOSPITALS, payload: data }))
-      fetchMessages().then(({ data }) => dispatch({ type: SET_MESSAGES, payload: data }))
-      fetchPatients().then(({ data }) => dispatch({ type: SET_PATIENTS, payload: data }))
+      fetchHospitals().then(({ data }) => dispatch({ type: SET_HOSPITALS, payload: data.hospitals }))
+      fetchMessages().then(({ data }) => dispatch({ type: SET_MESSAGES, payload: data.messages }))
+      fetchPatients().then(({ data }) => dispatch({ type: SET_PATIENTS, payload: data.patients }))
     }
   }, [initialLoad, dispatch])
 
