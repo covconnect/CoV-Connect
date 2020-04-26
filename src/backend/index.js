@@ -9,8 +9,7 @@ const config = JSON.parse(fs.readFileSync("./config/config.json"));
 const common = require("./controller/common");
 common.setSecret(config.secret);
 
-const dbRoute = "mongodb://" + config.database.username + ":" + config.database.password + "@" +
-                config.database.host + ":" + config.database.port + "/" + config.database.database;
+const dbRoute = "mongodb://" + config.database.host + ":" + config.database.port + "/" + config.database.database;
 
 mongoose.connect(dbRoute, {useUnifiedTopology: true, useNewUrlParser: true, 'useCreateIndex': true});
 
