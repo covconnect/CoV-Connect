@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 import { slide as Menu } from 'react-burger-menu';
 import Logout from "./Logout.js";
+import './sidebar.css';
 
 // HAMBURGER NAV ITEMS (HOME)
 // Used this object structure to create the sidebar menu items:
@@ -20,22 +21,23 @@ function Sidebar({ items }) {
     <div>
       <Menu>
         {items.map(({ title, contents }) => (
-          <div className="hamburger-nav">
-            {title}
-            {contents.map(({ destination, label }) => (
-              <li>
-                <NavLink
-                  key={label}
-                  className="menu-item"
-                  to={destination}
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
-                  {label}
-                </NavLink>
-              </li>
-            ))}{" "}
+          <div className="hamburger-nav" key={title}>
+            <span className="bm-title">{title}</span>
+            <ul className="bm-nav-list">
+              {contents.map(({ destination, label }) => (
+                <li className="bm-nav-list-item" key={label}>
+                  <NavLink
+                    className="menu-item"
+                    to={destination}
+                    style={{
+                      cursor: "pointer",
+                    }}
+                  >
+                    {label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
         <Logout />

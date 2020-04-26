@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
 import classnames from "classnames";
 import Select from 'react-select';
-import axios from 'axios';
 import _map from 'lodash/map';
+import { createPatient, fetchPatients, } from '../../actions/patientActions';
+import { SET_PATIENTS } from '../../actions/types';
 
 function AddPatientForm() {
-  const [initialLoad, setInitialLoad] = useState(true);
+  const dispatch = useDispatch();
+  const hospitals = useSelector(state => state.hospitals);
+  const hospitalList = useMemo(() => _map(hospitals, hospital => ({
+    value: hospital.id,
+    label: hospital.name,
+  })), [hospitals]);
   const [state, setState] = useState({
     patient_name: "",
     dob_date: "",
@@ -13,7 +20,6 @@ function AddPatientForm() {
     dob_year: "",
     unit: "",
     room_number: "",
-    hospitalList: [],
     selectedHospital: null,
     errors: {},
     successMessage: "",
@@ -22,24 +28,6 @@ function AddPatientForm() {
     isSearchable: true
   });
   const { errors, selectedHospital } = state;
-
-  useEffect(() => {
-    if (initialLoad) {
-      setInitialLoad(false);
-
-      axios.get('/hospital/fetch')
-        .then((res) => {
-          const hospitalList = _map(res.data.hospitals, (hospital) => ({
-            value: hospital.id,
-            label: hospital.name,
-          }));
-
-          setState({ ...state, hospitalList: hospitalList });
-        }).catch((err) => {
-          setState({ ...state, errorMessage: "Could not fetch hospital list" });
-        });
-    }
-  }, [initialLoad, state, setState]);
 
   function onChange(e) {
     setState({ ...state, [e.target.id]: e.target.value });
@@ -60,20 +48,25 @@ function AddPatientForm() {
                          parseInt(state.dob_month),
                          parseInt(state.dob_date));
 
-    axios.put('/patient/create', {
+    createPatient({
       name: state.patient_name,
       dob: dob.toDateString(),
       hospital_id: state.selectedHospital.value
     }).then((res) => {
       if(res.status === 200) {
-        setState({successMessage: res.data.message});
+        setState({ ...state, successMessage: res.data.message});
         clearFields(true);
+
+        fetchPatients().then(({ data }) => dispatch({
+          type: SET_PATIENTS,
+          payload: data.patients,
+        }));
       } else {
-        setState({errorMessage: res.data.message})
+        setState({ ...state, errorMessage: res.data.message})
         clearFields(false);
       }
     }).catch((err) => {
-      setState({errorMessage: err.message});
+      setState({ ...state, errorMessage: err.message});
       clearFields(false);
     });
   }
@@ -102,8 +95,8 @@ function AddPatientForm() {
             <Select
               isSearchable={state.isSearchable}
               value={selectedHospital}
-              onChange={selectedHospital => setState({ selectedHospital })}
-              options={state.hospitalList}
+              onChange={selectedHospital => setState({ ...state, selectedHospital })}
+              options={hospitalList}
               placeholder="Select Hospital"
             />
           </div>

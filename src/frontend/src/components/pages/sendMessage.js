@@ -1,16 +1,22 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import classnames from "classnames";
-import axios from "axios";
 import Select from "react-select";
 import _map from 'lodash/map';
+import { fetchMessages, createMessage } from '../../actions/messageActions';
+import { SET_MESSAGES } from '../../actions/types';
 import AddPatientForm from './AddPatientForm';
 
 function SendMessage() {
   const history = useHistory();
-  const [initialLoad, setInitialLoad] = useState(true);
+  const dispatch = useDispatch();
   const [showForm, setShowForm] = useState(false);
-  const [patientList, setPatientList] = useState([]);
+  const patients = useSelector(state => state.patients);
+  const patientList = useMemo(() => _map(patients, (patient) => ({
+    value: patient,
+    label: patient.patient_details.name,
+  })), [patients]);
   const [state, setState] = useState({
     selectedPatient: null,
     message: "",
@@ -20,26 +26,6 @@ function SendMessage() {
   });
   const { selectedPatient } = state;
   const selectStyles = { menu: styles => ({ ...styles, zIndex: 999 }) };
-  const fetchPatients = useCallback(() => {
-    axios.get('/patient/fetch')
-      .then((res) => {
-        const patientList = _map(res.data.patients, patient => ({
-          value: patient,
-          label: patient.patient_details.name,
-        }));
-
-        setPatientList(patientList);
-      }).catch((err) => {
-        setState({ ...state, errorMessage: err.message });
-      });
-  }, [state, setPatientList, setState]);
-
-  useEffect(() => {
-    if (initialLoad) {
-      fetchPatients();
-      setInitialLoad(false);
-    }
-  }, [fetchPatients, initialLoad, setInitialLoad]);
 
   useEffect(() => {
     setShowForm(false);
@@ -67,14 +53,21 @@ function SendMessage() {
   function onSubmit(e) {
     e.preventDefault();
 
-    axios.put('/message/create', {
+    createMessage({
       patient_id: selectedPatient.value.patient_details.id,
       message: state.message,
     }).then((res) => {
-      console.log({ res });
       if(res.status === 200) {
         setState({ successMessage: res.data.message });
-        doneSubmitting(false);
+
+        fetchMessages().then(({ data }) => {
+          dispatch({
+            type: SET_MESSAGES,
+            payload: data.messages,
+          });
+
+          doneSubmitting(false);
+        });
       } else {
         doneSubmitting(res.data.message);
       }
@@ -82,8 +75,6 @@ function SendMessage() {
       doneSubmitting(err.message);
     });
   }
-
-  console.log(state.errorMessage);
 
   return (
     <div className="valign-wrapper">
@@ -133,7 +124,7 @@ function SendMessage() {
                 </button>
             }
             <div style={{ display: showForm ? 'block' : 'none' }}>
-              <AddPatientForm onSave={fetchPatients} />
+              <AddPatientForm />
             </div>
           </div>
 

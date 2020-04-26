@@ -1,21 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, HashRouter } from "react-router-dom";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-
+import { useDispatch } from "react-redux";
+import { useInitialLoad } from '../../hooks';
 import Sidebar from "../layout/Sidebar";
 import sendMessage from "../pages/sendMessage";
 import SentMessage from "../pages/SentMessage";
 import aboutUs from "../pages/aboutUs";
 import DashboardHome from "../pages/DashboardHome";
-import DashboardHomeAdmin from '../pages/DashboardHomeAdmin';
+import { fetchHospitals } from '../../actions/hospitalActions';
+import { fetchMessages } from '../../actions/messageActions';
+import { fetchPatients } from '../../actions/patientActions';
+import { SET_HOSPITALS, SET_MESSAGES, SET_PATIENTS } from '../../actions/types';
+
+// const items = [
+//   { destination: "/sendMessage", label: "Send Message" },
+//   { destination: "/addPatient", label: "Add Patient" },
+//   { destination: "/aboutUs", label: "About Us" },
+// ];
 
 function Dashboard() {
-  // const items = [
-  //   { destination: "/sendMessage", label: "Send Message" },
-  //   { destination: "/addPatient", label: "Add Patient" },
-  //   { destination: "/aboutUs", label: "About Us" },
-  // ];
+  const initialLoad = useInitialLoad();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (initialLoad) {
+      fetchHospitals().then(({ data }) => dispatch({ type: SET_HOSPITALS, payload: data.hospitals }))
+      fetchMessages().then(({ data }) => dispatch({ type: SET_MESSAGES, payload: data.messages }))
+      fetchPatients().then(({ data }) => dispatch({ type: SET_PATIENTS, payload: data.patients }))
+    }
+  }, [initialLoad, dispatch])
 
   const sideBarItems = [
     {
@@ -26,7 +39,7 @@ function Dashboard() {
           label: "Send A Message",
         },
         {
-          destination: "/",
+          destination: "/sentMessage",
           label: "All Sent Messages",
         },
       ],
@@ -95,10 +108,4 @@ function Dashboard() {
   );
 }
 
-Dashboard.propTypes = {
-  auth: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => ({ auth: state.auth });
-
-export default connect(mapStateToProps)(Dashboard);
+export default Dashboard;

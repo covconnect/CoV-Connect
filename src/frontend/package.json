@@ -43,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "moment": "^2.24.0",
     "query-string": "^6.12.1"
   }
 }
