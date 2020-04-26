@@ -14,11 +14,11 @@ const DashboardHomeAdmin = () => {
         return (
             messages.map(m => (
                 <tr style={{ borderColor: 'transparent', textIndent: '47px'}}>
-                    <th className="grey-text" style={{ fontWeight: 'normal'}}>{m.room}</th>
-                    <th className="grey-text" style={{ fontWeight: 'normal'}}>{m.unit}</th>
-                    <th className="grey-text" style={{ fontWeight: 'normal'}}>{m.name}</th>
-                    <th className="grey-text" style={{ fontWeight: 'normal'}}>{m.dob}</th>
-                    <th>
+                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.room}</td>
+                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.unit}</td>
+                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.name}</td>
+                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.dob}</td>
+                    <td>
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <button 
                                 className="btn waves-effect hoverable" 
@@ -33,7 +33,7 @@ const DashboardHomeAdmin = () => {
                                 Print
                             </button>
                         </div>
-                    </th>
+                    </td>
                 </tr>
             ))
         )
