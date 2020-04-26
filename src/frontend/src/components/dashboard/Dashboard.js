@@ -25,7 +25,7 @@ function Dashboard() {
           label: "Send A Message",
         },
         {
-          destination: "/",
+          destination: "/sentMessage",
           label: "All Sent Messages",
         },
       ],
