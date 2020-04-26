@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 import classnames from "classnames";
-import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
 import Select from 'react-select';
 import axios from 'axios';
 import _map from 'lodash/map';
 
-function AddPatient() {
-  const { user } = useSelector(({ auth }) => auth);
+function AddPatientForm() {
   const [initialLoad, setInitialLoad] = useState(true);
   const [state, setState] = useState({
     patient_name: "",
     dob_date: "",
     dob_month: "",
     dob_year: "",
+    unit: "",
+    room_number: "",
     hospitalList: [],
     selectedHospital: null,
     errors: {},
@@ -118,12 +117,11 @@ function AddPatient() {
               className={classnames("", {invalid: errors.patient_name})}
             />
             <label htmlFor="patient_name">Patient Name</label>
-            <span className="red-text">{errors.name}</span>
+            <span className="red-text">{errors.patient_name}</span>
           </div>
-          <div className="input-field col s12">
-            <table>
-              <td>
-                <br/>
+          <div className="input-field col s12" style={{ paddingTop: 32 }}>
+            <div className="row">
+              <div className="col s12 m4">
                 <input
                   onChange={onChange}
                   value={state.dob_month}
@@ -132,9 +130,8 @@ function AddPatient() {
                   placeholder="mm"
                   className={classnames("", {invalid: errors.dob_month})}
                 />
-              </td>
-              <td>
-                <br/>
+              </div>
+              <div className="col s12 m4">
                 <input
                   onChange={onChange}
                   value={state.dob_date}
@@ -143,9 +140,8 @@ function AddPatient() {
                   placeholder="dd"
                   className={classnames("", {invalid: errors.dob_date})}
                 />
-              </td>
-              <td>
-                <br/>
+              </div>
+              <div className="col s12 m4">
                 <input
                   onChange={onChange}
                   value={state.dob_year}
@@ -154,28 +150,40 @@ function AddPatient() {
                   placeholder="yyyy"
                   className={classnames("", {invalid: errors.dob_year})}
                 />
-              </td>
-            </table>
+              </div>
+            </div>
             <label htmlFor="dob">Patient's Date of Birth</label>
           </div>
-          <div className="col s12" style={{ paddingLeft: "11.250px" }}>
-            {/* <button */}
-            {/*   style={{ */}
-            {/*     width: "150px", */}
-            {/*     borderRadius: "3px", */}
-            {/*     letterSpacing: "1.5px", */}
-            {/*     marginTop: "1rem" */}
-            {/*   }} */}
-            {/*   type="submit" */}
-            {/*   className="btn btn-large waves-effect waves-light hoverable blue accent-3" */}
-            {/* > */}
-            {/*   Add */}
-            {/* </button> */}
+          <div className="input-field col s12 m6">
+            <input
+              onChange={onChange}
+              value={state.unit}
+              error={errors.unit}
+              id="unit"
+              type="text"
+              className={classnames("", {invalid: errors.unit})}
+            />
+            <label htmlFor="unit">Unit</label>
+            <span className="red-text">{errors.unit}</span>
           </div>
+          <div className="input-field col s12 m6">
+            <input
+              onChange={onChange}
+              value={state.room_number}
+              error={errors.room_number}
+              id="room_number"
+              type="text"
+              className={classnames("", {invalid: errors.room_number})}
+            />
+            <label htmlFor="room_number">Room Number</label>
+            <span className="red-text">{errors.room_number}</span>
+          </div>
+
+          <button className="btn blue waves-effect waves-light hoverable">Save Patient</button>
         </form>
       </div>
     </div>
   );
 }
 
-export default AddPatient;
+export default AddPatientForm;

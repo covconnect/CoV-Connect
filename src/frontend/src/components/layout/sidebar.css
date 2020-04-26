@@ -1,0 +1,20 @@
+.bm-item-list {
+  background: #f2f2f2;
+  padding: 0 24px;
+}
+
+.bm-item.menu-item {
+  color: #333;
+  margin-left: 0;
+}
+
+.bm-item.menu-item:hover {
+  color: #333;
+  background: rgba(0, 0, 0, 0.09);
+}
+
+.logout-button {
+  margin: 24px 0 0;
+  width: 100%;
+  color: white;
+}
