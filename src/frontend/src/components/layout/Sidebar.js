@@ -1,6 +1,7 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-import { slide as Menu } from "react-burger-menu";
+import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom';
+import { slide as Menu } from 'react-burger-menu';
 import Logout from "./Logout.js";
 
 // HAMBURGER NAV ITEMS (HOME)
@@ -12,7 +13,7 @@ import Logout from "./Logout.js";
         destination: "/sendMessage",
         label: "Send A Message",
       },
-    } 
+    }
 */
 function Sidebar({ items }) {
   return (
@@ -40,20 +41,14 @@ function Sidebar({ items }) {
         <Logout />
       </Menu>
     </div>
-
-    // <Menu>
-    //   {items.map(({ label, destination }) => (
-    //     <NavLink
-    //       key={label}
-    //       className="menu-item"
-    //       to={destination}
-    //       style={{ cursor: "pointer" }}
-    //     >
-    //       {label}
-    //     </NavLink>
-    //   ))}
-    // </Menu>
   );
 }
+
+Sidebar.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.shape({
+    label: PropTypes.string,
+    destination: PropTypes.string,
+  })),
+};
 
 export default Sidebar;

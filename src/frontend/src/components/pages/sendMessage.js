@@ -1,51 +1,53 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect, useState } from "react";
+import { useHistory } from 'react-router-dom';
 import classnames from "classnames";
 import axios from "axios";
 import Select from "react-select";
 import _map from 'lodash/map';
-import AddPatient from './addPatient';
+import AddPatientForm from './AddPatientForm';
 
 function SendMessage() {
-  const { user } = useSelector(({ auth }) => auth);
+  const history = useHistory();
   const [initialLoad, setInitialLoad] = useState(true);
-  const [selected, setSelected] = useState('existing');
+  const [showForm, setShowForm] = useState(false);
+  const [patientList, setPatientList] = useState([]);
   const [state, setState] = useState({
     selectedPatient: null,
-    patientList: [],
     message: "",
     errors: {},
     successMessage: "",
     errorMessage: ""
   });
-  const { errors, selectedPatient } = state;
+  const { selectedPatient } = state;
   const selectStyles = { menu: styles => ({ ...styles, zIndex: 999 }) };
+  const fetchPatients = useCallback(() => {
+    axios.get('/patient/fetch')
+      .then((res) => {
+        const patientList = _map(res.data.patients, patient => ({
+          value: patient,
+          label: patient.patient_details.name,
+        }));
+
+        setPatientList(patientList);
+      }).catch((err) => {
+        setState({ ...state, errorMessage: err.message });
+      });
+  }, [state, setPatientList, setState]);
 
   useEffect(() => {
     if (initialLoad) {
+      fetchPatients();
       setInitialLoad(false);
-      axios.get('/patient/fetch')
-        .then((res) => {
-          const patientList = _map(res.data.patients, patient => ({
-            value: patient,
-            label: patient.patient_details.name,
-          }));
-
-          setState({ ...state, patientList: patientList });
-        }).catch((err) => {
-          setState({ ...state, errors: { error: err.message } });
-        });
     }
-  }, [initialLoad, state, setState]);
+  }, [fetchPatients, initialLoad, setInitialLoad]);
 
-  function clearFields(error) {
+  useEffect(() => {
+    setShowForm(false);
+  }, [ patientList ]);
+
+  function doneSubmitting(error) {
     if(!error) {
-      setState({
-        ...state,
-        selectedPatient: null,
-        message: "",
-        errorMessage: "",
-      });
+      history.push(`/sentMessage?name=${encodeURIComponent(selectedPatient.label)}&message=${encodeURIComponent(state.message)}`)
     } else {
       setState({
         ...state,
@@ -66,19 +68,22 @@ function SendMessage() {
     e.preventDefault();
 
     axios.put('/message/create', {
-      patient_id: state.selectedPatient.value.patient_details.id,
+      patient_id: selectedPatient.value.patient_details.id,
       message: state.message,
     }).then((res) => {
+      console.log({ res });
       if(res.status === 200) {
         setState({ successMessage: res.data.message });
-        clearFields(true);
+        doneSubmitting(false);
       } else {
-        clearFields(res.data.message);
+        doneSubmitting(res.data.message);
       }
     }).catch((err) => {
-      clearFields(err.message);
+      doneSubmitting(err.message);
     });
   }
+
+  console.log(state.errorMessage);
 
   return (
     <div className="valign-wrapper">
@@ -100,41 +105,40 @@ function SendMessage() {
           </div>
 
           <div className="col s12">
-            <div style={{ display: 'flex', width: '100%', alignItems: 'center' }}>
-              <div
-                onClick={() => setSelected('existing')}
-                style={{ width: 40, cursor: 'pointer' }}
-              >
-                <i className="material-icons">{ selected === 'existing' ? 'radio_button_checked' : 'radio_button_unchecked'}</i>
-              </div>
-              <div style={{ width: '100%' }}>
-                <Select
-                  styles={selectStyles}
-                  value={selectedPatient}
-                  onChange={selectedPatient => setState({ ...state, selectedPatient })}
-                  options={state.patientList}
-                  placeholder="Select Patient"
-                />
-              </div>
-            </div>
+            <Select
+              styles={selectStyles}
+              value={selectedPatient}
+              onChange={selectedPatient => setState({ ...state, selectedPatient })}
+              options={patientList}
+              placeholder="Select Patient"
+            />
           </div>
 
           <div className="col s12" style={{ marginTop: 16 }}>
-            <div style={{ display: 'flex', width: '100%' }}>
-              <div
-                onClick={() => setSelected('new')}
-                style={{ width: 40, cursor: 'pointer', marginTop: 10 }}
-              >
-                <i className="material-icons">{ selected !== 'existing' ? 'radio_button_checked' : 'radio_button_unchecked'}</i>
-              </div>
-              <div style={{ width: '100%' }}>
-                <AddPatient />
-              </div>
+            {
+              showForm
+                ? <button
+                  className="btn grey waves-effect waves-light hoverable"
+                  type="button"
+                  onClick={() => setShowForm(!showForm)}
+                >
+                  Cancel New Patient
+                </button>
+                : <button
+                  className="btn blue waves-effect waves-light hoverable"
+                  type="button"
+                  onClick={() => setShowForm(!showForm)}
+                >
+                  New Patient
+                </button>
+            }
+            <div style={{ display: showForm ? 'block' : 'none' }}>
+              <AddPatientForm onSave={fetchPatients} />
             </div>
           </div>
 
 
-          <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+          <div className="col s12 mt-40" style={{ paddingLeft: "11.250px" }}>
             <h5 className="blue-text">
               <b>Your message</b>
             </h5>
@@ -157,10 +161,10 @@ function SendMessage() {
                 id="message"
                 type="text"
                 data-length="500"
-                className={classnames("materialize-textarea ", {invalid: errors.message})}
+                className={classnames("materialize-textarea ", {invalid: state.errorMessage})}
               />
               <label htmlFor="message">Message</label>
-              <span className="red-text">{errors.message}</span>
+              <span className="red-text">{state.errorMessage}</span>
             </div>
             <div className="col s12" style={{ paddingLeft: "11.250px" }}>
               <button

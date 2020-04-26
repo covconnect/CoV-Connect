@@ -20,7 +20,7 @@ class Logout extends Component {
               marginTop: "50%",
             }}
             onClick={this.onLogoutClick}
-            className="blue-text"
+            className="btn waves-effect hoverable blue"
             // "btn btn-medium waves-effect waves-light hoverable blue accent-3 right"
           >
             Logout

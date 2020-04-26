@@ -19,6 +19,7 @@ axios.defaults.validateStatus = (status) => {
   return status >= 200 && status < 500;
 };
 
+
 // Check for token to keep user logged in
 if (localStorage.jwtToken && localStorage.jwtToken !== "undefined") {
   // Set auth token header auth
@@ -45,9 +46,11 @@ function App() {
       <Router>
         <div className="App">
           <Navbar />
+
           <Route exact path="/" component={Landing} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
+
           <Switch>
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
           </Switch>
