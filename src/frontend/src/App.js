@@ -46,8 +46,6 @@ function App() {
       <Router>
         <div className="App">
           <Navbar />
-
-          
           <Switch>
             <Route exact path="/" component={Landing} />
             <Route exact path="/register" component={Register} />

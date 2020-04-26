@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { Route, HashRouter } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useInitialLoad } from '../../hooks';
 import Sidebar from "../layout/Sidebar";
 import sendMessage from "../pages/sendMessage";
 import SentMessage from "../pages/SentMessage";
 import aboutUs from "../pages/aboutUs";
 import DashboardHome from "../pages/DashboardHome";
+import DashboardHomeAdmin from '../pages/DashboardHomeAdmin';
 import { fetchHospitals } from '../../actions/hospitalActions';
 import { fetchMessages } from '../../actions/messageActions';
 import { fetchPatients } from '../../actions/patientActions';
@@ -21,6 +22,7 @@ import { SET_HOSPITALS, SET_MESSAGES, SET_PATIENTS } from '../../actions/types';
 function Dashboard() {
   const initialLoad = useInitialLoad();
   const dispatch = useDispatch();
+  const { user } = useSelector(state => state.auth)
 
   useEffect(() => {
     if (initialLoad) {
@@ -85,18 +87,18 @@ function Dashboard() {
     },
   ];
 
-
-  // <Route exact path="/" component={DashboardHome}/>
-
   return (
     <HashRouter>
       <div>
         <div>
           <Sidebar items={sideBarItems} left />
         </div>
-        <div className="container valign-wrapper" style={{ paddingTop: 32 }}>
+        <div className="container" style={{ paddingTop: 32 }}>
+          { user.type === 'admin' ? 
+            <Route exact path="/" component={DashboardHomeAdmin}/> :
+            <Route exact path="/" component={DashboardHome}/>
+          }
           <div className="row">
-            <Route exact path="/" component={DashboardHomeAdmin}/>
             <Route path="/sendMessage" component={sendMessage}/>
             <Route path="/sentMessage" component={SentMessage}/>
             {/* <Route path="/addPatient" component={addPatient} /> */}
