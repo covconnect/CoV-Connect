@@ -4,22 +4,10 @@ import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import moment from 'moment';
 import _filter from 'lodash/filter';
-import _find from 'lodash/find';
 import _map from 'lodash/map';
 import _sortBy from 'lodash/sortBy';
-
-const STATUSES = [
-  'Delivered',
-  'Processing',
-];
-
-function getPatientNameFromMessage(msg, patients) {
-  try {
-    return _find(patients, ({ patient_details }) => patient_details.id === msg.patient_id).patient_details.name
-  } catch (err) {
-    return 'Patient Name Unkown';
-  }
-}
+import { STATUSES } from '../../utils/constants';
+import { getPatientNameFromMessage } from '../../utils/helpers';
 
 function AllSentMessages() {
   const [tab, setTab] = useState(0);

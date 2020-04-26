@@ -8,23 +8,33 @@ const DashboardHomeAdmin = () => {
 
     const showMessages = (messages) => {
         if(!messages?.length){
-            return <p className="grey-text center">No Messages</p>
+            return <p className="grey-text">No Messages</p>
         }
 
         return (
             messages.map(m => (
-                <div as="ul" style={{textAlign: 'center', display: 'flex', alignItems: 'center'}}>
-                    <div as="li" className="grey-text" style={{ marginBottom: '66px',  width: 'calc(2 / 12 * 100%)'}}>{m.room}</div>
-                    <div as="li" className="grey-text" style={{ marginBottom: '66px',  width: 'calc(1 / 12 * 100%)'}}>{m.unit}</div>
-                    <div as="li" className="grey-text" style={{ marginBottom: '66px',  width: 'calc(2 / 12 * 100%)'}}>{m.name}</div>
-                    <div as="li" className="grey-text" style={{ marginBottom: '66px', width: 'calc(2 / 12 * 100%)'}}>{m.dob}</div>
-                    <div as="li" style={{ marginBottom: '66px', width: 'calc(4 / 12 * 100%'}}>
+                <tr style={{ borderColor: 'transparent', textIndent: '47px'}}>
+                    <th className="grey-text" style={{ fontWeight: 'normal'}}>{m.room}</th>
+                    <th className="grey-text" style={{ fontWeight: 'normal'}}>{m.unit}</th>
+                    <th className="grey-text" style={{ fontWeight: 'normal'}}>{m.name}</th>
+                    <th className="grey-text" style={{ fontWeight: 'normal'}}>{m.dob}</th>
+                    <th>
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <button className="btn waves-effect hoverable" style={{ width: '127px', marginRight: '16px', background: 'rgba(94,147,151)', borderRadius: '10px'}}>View</button>
-                            <button className="btn waves-effect hoverable blue" style={{ width: '127px', borderRadius: '10px'}}>Print</button>
+                            <button 
+                                className="btn waves-effect hoverable" 
+                                style={{ width: '127px', marginRight: '16px', background: 'rgba(94,147,151)', borderRadius: '10px'}}
+                            >
+                                View
+                            </button>
+                            <button 
+                                className="btn waves-effect hoverable blue" 
+                                style={{ width: '127px', borderRadius: '10px'}}
+                            >
+                                Print
+                            </button>
                         </div>
-                    </div>
-                </div>
+                    </th>
+                </tr>
             ))
         )
     }
@@ -56,18 +66,21 @@ const DashboardHomeAdmin = () => {
                 </div>
             </div>
             <div>
-                <div className="white z-depth-1" style={{ padding: '60px 0', marginTop: '36px'}}>
-                    <div as="ul" className="row" style={{textAlign: 'center', marginBottom: '24px'}}>
-                        <div as="li" className="col s2 grey-text">Room</div>
-                        <div as="li" className="col s1 grey-text">Unit</div>
-                        <div as="li" className="col s2 grey-text">Name</div>
-                        <div as="li" className="col s2 grey-text">Date of Birth</div>
-                        <div as="li" className="col s4 grey-text">Action(s)</div>
-                    </div>
-                    <div style={{height: '1px', backgroundColor: '#009DBB', margin: "0 20px", marginBottom: '35px'}}></div>
-                    <div className="row">
-                        { showMessages(messages) }
-                    </div>
+                <div className="white z-depth-1" style={{ padding: '60px 20px', marginTop: '36px'}}>
+                    <table>
+                        <thead>
+                            <tr style={{ borderColor: '#009DBB', textIndent: '47px'}}>
+                                <th>Room</th>
+                                <th>Unit</th>
+                                <th>Name</th>
+                                <th>Date of Birth</th>
+                                <th style={{textIndent: '45%'}}>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { showMessages(messages) }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </>

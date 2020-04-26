@@ -46,26 +46,18 @@ Steps to run the application:
         cd ../frontend
         sudo npm install
 
-5. Update the file covconnect/src/backend/config/config.json with all the details regarding the mongodb credentials and the JWT secret.
+5. Set environment variables with all the details regarding the mongodb credentials and the JWT secret.
 
-        {
-          "server":
-          {
-            "host": "localhost",
-            "port": 8080
-          },
-          "database":
-          {
-            "type": "mongodb",
-            "host": "localhost",
-            "port": 27017,
-            "username": "covconnectUser",
-            "password": "<mongodb_password>",
-            "database": "covconnect"
-          },
-          "secret": "<jwt_secret>"
-        }
 
+        MONGODB_HOST --> Hostname for MongoDB. [ Default: localhost ]
+        MONGODB_PORT --> Port number for MongoDB. [ Default: 27017 ]
+        MONGODB_NAME --> Name of the database. [ Default: covconnect ]
+        MONGODB_USER --> Username for the database. [ Default: covconnectUser ]
+        MONGODB_PASSWORD --> Password for the database. [ Mandatory ]
+        SERVER_HOST --> Hostname or IP for the server to run on. [ Default: localhost ]
+        SERVER_PORT --> Port number for the server to run on. [ Default: 8080 ]
+        JWT_SECRET --> Secret for json web tokens. [ Mandatory ]                                                   
+    
     Note: Use a UUID for JWT secret as well.
 
 6. Start the application.
