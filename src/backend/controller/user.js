@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const uuid = require("uuid");
 
 
 const common = require("./common");
@@ -12,12 +13,17 @@ const create = (req, res) =>
     user.name = req.body.name;
     user.email = req.body.email;
     user.passhash = bcrypt.hashSync(req.body.password, 10);
+    user.verification_code = uuid.v4();
+    //user.status = 2;
 
     user.save()
         .then(
-            () =>
+            (result) =>
             {
-                res.json({message: "User created successfully"});
+                // common.sendVerificationMail(result.id, user.email, user.verification_code);
+
+                res.json({message: "User created successfully. " +
+                                   "Activate your account using the email received."});
             })
         .catch(
             (err) =>
@@ -70,8 +76,31 @@ const login = (req, res) =>
 };
 
 
+const verifyAccount = (req, res) =>
+{
+    userModel
+        .User
+        .updateOne({_id: req.query.user_id, verification_code: req.query.verification_code},
+                   {$set: {status: 1}})
+        .then(
+            (result) =>
+            {
+                if(result.nModified === 1)
+                    res.send("Account activated. Login to continue.");
+                else
+                    res.status(400).send("Account cannot be found.");
+            })
+        .catch(
+            (err) =>
+            {
+                res.status(500).json(common.errorResponse(err));
+            });
+};
+
+
 module.exports =
     {
         create: create,
-        login: login
+        login: login,
+        verifyAccount: verifyAccount
     };

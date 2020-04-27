@@ -1,11 +1,13 @@
-const jwt = require("jsonwebtoken");
+const short_uuid = require("short-uuid");
+const bcrypt = require("bcrypt");
 
 
 const common = require("./common");
 const hospitalModel = require("../models/hospital");
+const userModel = require("../models/user");
 
 
-const create = (req, res) =>
+async function create(req, res)
 {
     const user = common.fetchPayloadFromToken(req);
 
@@ -15,27 +17,47 @@ const create = (req, res) =>
         return;
     }
 
-    let hospital = hospitalModel.Hospital();
-    hospital.name = req.body.name;
-    hospital.email = req.body.email;
-    hospital.address = req.body.address;
-    hospital.units = req.body.units;
+    try
+    {
+        let hospital = hospitalModel.Hospital();
+        hospital.name = req.body.name;
+        hospital.email = req.body.email;
+        hospital.address = req.body.address;
+        hospital.units = req.body.units;
 
-    hospital.save()
-           .then(
-               () =>
-               {
-                   res.json({message: "Hospital created successfully"});
-               })
-           .catch(
-               (err) =>
-               {
-                   if(err.code === 11000)
-                       res.status(400).json({message: "Hospital already exists"});
-                   else
-                       res.status(500).json(common.errorResponse(err));
-               });
-};
+        await hospital.save();
+    }
+    catch(err)
+    {
+        if(err.code === 11000)
+            res.status(400).json({message: "Hospital already exists"});
+        else
+            res.status(500).json(common.errorResponse(err));
+
+        return;
+    }
+
+    try
+    {
+        let password = short_uuid.generate();
+        let user = userModel.User();
+        user.name = req.body.name;
+        user.email = req.body.email;
+        user.passhash = bcrypt.hashSync(password, 10);
+        user.status = 1;
+        user.type = "hospital_admin";
+
+        await user.save();
+        common.sendCredentialsToHospital(req.body.email, password);
+    }
+    catch(err)
+    {
+        res.status(500).json(common.errorResponse(err));
+        return;
+    }
+
+    res.json({message: "Hospital created successfully"});
+}
 
 
 const fetch = (req, res) =>

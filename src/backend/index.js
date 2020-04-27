@@ -12,15 +12,18 @@ const db_pass = process.env.MONGODB_PASSWORD;
 const sv_host = "SERVER_HOST" in process.env ? process.env.SERVER_HOST : "localhost";
 const sv_port = "SERVER_PORT" in process.env ? process.env.SERVER_PORT : "8080";
 const jwt_secret = process.env.JWT_SECRET;
+const email = "EMAIL" in process.env ? process.env.EMAIL : "covconnect.live@gmail.com";
+const email_secret = process.env.EMAIL_SECRET;
 
-if(null in [jwt_secret, db_pass])
+if(null in [jwt_secret, db_pass, email_secret])
 {
-    console.log("Mandatory environment variables: [JWT_SECRET, MONGODB_PASSWORD]")
+    console.log("Mandatory environment variables: [JWT_SECRET, MONGODB_PASSWORD, EMAIL_SECRET]")
     process.exit(1);
 }
 
 const common = require("./controller/common");
 common.setSecret(jwt_secret);
+common.initializeMailer(email, email_secret);
 
 const dbRoute = "mongodb://" + db_user + ":" + db_pass + "@" + db_host + ":" + db_port + "/" + db_name;
 

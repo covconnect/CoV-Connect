@@ -47,6 +47,13 @@ module.exports = function(app)
             userController.login(req, res);
         });
 
+    app.get(
+        '/user/account_activation',
+        (req, res) =>
+        {
+            userController.verifyAccount(req, res);
+        });
+
     app.put(
         '/hospital/create',
         authenticateJWT,
