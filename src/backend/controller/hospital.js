@@ -103,7 +103,7 @@ const update = (req, res) =>
 
     hospitalModel
         .Hospital
-        .updateOne({id: req.body.id, user_id: user.id}, updates)
+        .updateOne({id: req.body.id, user_id: user.id}, {$set: updates})
         .then(
             () =>
             {
