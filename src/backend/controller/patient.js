@@ -14,6 +14,7 @@ const create = (req, res) =>
     patient.dob = req.body.dob;
     patient.user_id = user.id;
     patient.hospital_id = req.body.hospital_id;
+    patient.unit = req.body.unit;
 
     patient.save()
         .then(
@@ -48,12 +49,17 @@ const fetch = (req, res) =>
                     result.forEach(
                         (patient) =>
                         {
-                        patients.push({patient_details:
-                                {
-                                    id: patient.id,
-                                    name: patient.name,
-                                    dob: patient.dob
-                                }, user_id: patient.user_id, hospital_id: patient.hospital_id})
+                        patients.push(
+                            {
+                                patient_details:
+                                    {
+                                        id: patient.id,
+                                        name: patient.name,
+                                        dob: patient.dob
+                                    },
+                                user_id: patient.user_id,
+                                hospital_id: patient.hospital_id,
+                                unit: patient.unit})
                         });
                     res.json({patients: patients});
                 }

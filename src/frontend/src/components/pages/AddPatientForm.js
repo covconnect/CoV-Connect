@@ -12,14 +12,14 @@ function AddPatientForm() {
   const hospitalList = useMemo(() => _map(hospitals, hospital => ({
     value: hospital.id,
     label: hospital.name,
+    units: _map(hospital.units, unit => ({value: unit, label: unit}))
   })), [hospitals]);
   const [state, setState] = useState({
     patient_name: "",
     dob_date: "",
     dob_month: "",
     dob_year: "",
-    unit: "",
-    room_number: "",
+    selectedUnit: null,
     selectedHospital: null,
     errors: {},
     successMessage: "",
@@ -27,11 +27,11 @@ function AddPatientForm() {
     focused: false,
     isSearchable: true
   });
-  const { errors, selectedHospital } = state;
+  const { errors, selectedHospital, selectedUnit } = state;
 
   function onChange(e) {
     setState({ ...state, [e.target.id]: e.target.value });
-  };
+  }
 
   function clearFields(error) {
     if(!error) {
@@ -51,7 +51,8 @@ function AddPatientForm() {
     createPatient({
       name: state.patient_name,
       dob: dob.toDateString(),
-      hospital_id: state.selectedHospital.value
+      hospital_id: state.selectedHospital.value,
+      unit: state.selectedUnit.value
     }).then((res) => {
       if(res.status === 200) {
         setState({ ...state, successMessage: res.data.message});
@@ -147,32 +148,18 @@ function AddPatientForm() {
             </div>
             <label htmlFor="dob">Patient's Date of Birth</label>
           </div>
-          <div className="input-field col s12 m6">
-            <input
-              onChange={onChange}
-              value={state.unit}
-              error={errors.unit}
-              id="unit"
-              type="text"
-              className={classnames("", {invalid: errors.unit})}
+          <div className="input-field col s12">
+            <Select
+                isSearchable={state.isSearchable}
+                value={selectedUnit}
+                onChange={selectedUnit => setState({ ...state, selectedUnit })}
+                options={selectedHospital ? selectedHospital.units : []}
+                placeholder="Select Unit"
             />
-            <label htmlFor="unit">Unit</label>
-            <span className="red-text">{errors.unit}</span>
           </div>
-          <div className="input-field col s12 m6">
-            <input
-              onChange={onChange}
-              value={state.room_number}
-              error={errors.room_number}
-              id="room_number"
-              type="text"
-              className={classnames("", {invalid: errors.room_number})}
-            />
-            <label htmlFor="room_number">Room Number</label>
-            <span className="red-text">{errors.room_number}</span>
+          <div>
+            <button className="btn blue waves-effect waves-light hoverable">Save Patient</button>
           </div>
-
-          <button className="btn blue waves-effect waves-light hoverable">Save Patient</button>
         </form>
       </div>
     </div>

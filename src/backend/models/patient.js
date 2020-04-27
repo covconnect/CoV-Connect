@@ -8,6 +8,7 @@ const Patient = new Schema(
         dob: {type: Date, required: true},
         hospital_id: {type: String, required: true},
         user_id: {type: String, required: true},
+        unit: {type: String, required: true},
         status: {type: Number, default: 1}
     },
     { timestamps: true }
