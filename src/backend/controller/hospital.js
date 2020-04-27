@@ -9,15 +9,17 @@ const create = (req, res) =>
 {
     const user = common.fetchPayloadFromToken(req);
 
-    /*if(user.type != "admin")
+    if(user.type !== "admin")
     {
         res.status(401).json({message: "Unathorized access"});
         return;
-    }*/
+    }
 
     let hospital = hospitalModel.Hospital();
     hospital.name = req.body.name;
+    hospital.email = req.body.email;
     hospital.address = req.body.address;
+    hospital.units = req.body.units;
 
     hospital.save()
            .then(
@@ -51,8 +53,13 @@ const fetch = (req, res) =>
                     result.forEach(
                         (hospital) =>
                         {
-                            hospitals.push({id: hospital.id, name: hospital.name,
-                                               address: hospital.address})
+                            hospitals.push(
+                                {
+                                    id: hospital.id,
+                                    name: hospital.name,
+                                    email: hospital.email,
+                                    address: hospital.address,
+                                    units: hospital.units})
                         });
 
                     res.json({hospitals: hospitals});
