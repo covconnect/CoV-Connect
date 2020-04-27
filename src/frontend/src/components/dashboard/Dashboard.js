@@ -15,12 +15,6 @@ import { fetchMessages } from '../../actions/messageActions';
 import { fetchPatients } from '../../actions/patientActions';
 import { SET_HOSPITALS, SET_MESSAGES, SET_PATIENTS } from '../../actions/types';
 
-// const items = [
-//   { destination: "/sendMessage", label: "Send Message" },
-//   { destination: "/addPatient", label: "Add Patient" },
-//   { destination: "/aboutUs", label: "About Us" },
-// ];
-
 function Dashboard() {
   const initialLoad = useInitialLoad();
   const dispatch = useDispatch();
@@ -90,7 +84,6 @@ function Dashboard() {
           <div className="row w-100">
             <Route path="/sendMessage" component={sendMessage}/>
             <Route path="/sentMessage" component={SentMessage}/>
-            {/* <Route path="/addPatient" component={addPatient} /> */}
             <Route path="/aboutUs" component={aboutUs}/>
             <Route path="/hospitals" component={Hospitals}/>
             <Route path="/manageMessages" component={ManageMessages}/>
