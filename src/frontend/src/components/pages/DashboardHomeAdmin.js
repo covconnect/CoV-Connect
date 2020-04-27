@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import _startCase from 'lodash/startCase';
+import MessagesAdmin from './MessagesAdmin'
+import Modal from '../dashboard/Modal'
 
 const DashboardHomeAdmin = () => {
     const { user } = useSelector((state) => state.auth)
     const messages = useSelector((state) => state.messages)
+    // Info to be passed to modal or to print 
+    const [ messageDetails, setMessageDetails ] = useState({});
+    const [ showPrintModal, setShowPrintModal ] = useState(false);
+
+    const handleClickPrint = (msg) => {
+        setMessageDetails(msg);
+        setShowPrintModal(true);
+    } 
 
     const showMessages = (messages) => {
         if(!messages?.length){
@@ -12,30 +22,7 @@ const DashboardHomeAdmin = () => {
         }
 
         return (
-            messages.map(m => (
-                <tr style={{ borderColor: 'transparent', textIndent: '47px'}}>
-                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.room}</td>
-                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.unit}</td>
-                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.name}</td>
-                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.dob}</td>
-                    <td>
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <button 
-                                className="btn waves-effect hoverable" 
-                                style={{ width: '127px', marginRight: '16px', background: 'rgba(94,147,151)', borderRadius: '10px'}}
-                            >
-                                View
-                            </button>
-                            <button 
-                                className="btn waves-effect hoverable blue" 
-                                style={{ width: '127px', borderRadius: '10px'}}
-                            >
-                                Print
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            ))
+            messages.map((msg, i) => (<MessagesAdmin key={`${msg.room}${msg.unit}${i}`} message={msg} handlePrintClick={handleClickPrint}/>))
         )
     }
 
@@ -83,6 +70,7 @@ const DashboardHomeAdmin = () => {
                     </table>
                 </div>
             </div>
+            <Modal isOpen={showPrintModal}/>
         </>
     )
 }
