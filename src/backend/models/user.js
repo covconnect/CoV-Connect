@@ -9,7 +9,8 @@ const User = new Schema(
         passhash: {type: String, required: true},
         dob: {type: Number},
         type: {type: String, required: true, default: "user"},
-        status: {type: Number, default: 1}
+        status: {type: Number, default: 1},
+        verification_code: {type: String}
     },
     { timestamps: true }
 );

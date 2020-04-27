@@ -14,6 +14,7 @@ const create = (req, res) =>
     patient.dob = req.body.dob;
     patient.user_id = user.id;
     patient.hospital_id = req.body.hospital_id;
+    patient.unit = req.body.unit;
 
     patient.save()
         .then(
@@ -48,12 +49,17 @@ const fetch = (req, res) =>
                     result.forEach(
                         (patient) =>
                         {
-                        patients.push({patient_details:
-                                {
-                                    id: patient.id,
-                                    name: patient.name,
-                                    dob: patient.dob
-                                }, user_id: patient.user_id, hospital_id: patient.hospital_id})
+                        patients.push(
+                            {
+                                patient_details:
+                                    {
+                                        id: patient.id,
+                                        name: patient.name,
+                                        dob: patient.dob
+                                    },
+                                user_id: patient.user_id,
+                                hospital_id: patient.hospital_id,
+                                unit: patient.unit})
                         });
                     res.json({patients: patients});
                 }
@@ -70,8 +76,39 @@ const fetch = (req, res) =>
 };
 
 
+const update = (req, res) =>
+{
+    const user = common.fetchPayloadFromToken(req);
+    let updates = {};
+
+    if(req.body.hasOwnProperty("unit") && req.body.unit !== null)
+        updates["unit"] = req.body.unit;
+
+    if(updates === {})
+    {
+        res.json({message: "Patient updated successfully"});
+        return;
+    }
+
+    patientModel
+        .Patient
+        .updateOne({id: req.body.id, user_id: user.id}, {$set: updates})
+        .then(
+            () =>
+            {
+                res.json({message: "Patient updated successfully"});
+            })
+        .catch(
+            (err) =>
+            {
+                res.status(500).json(common.errorResponse(err));
+            });
+};
+
+
 module.exports =
     {
         create: create,
-        fetch: fetch
+        fetch: fetch,
+        update: update
     };

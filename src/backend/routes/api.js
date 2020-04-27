@@ -47,12 +47,27 @@ module.exports = function(app)
             userController.login(req, res);
         });
 
+    app.get(
+        '/user/account_activation',
+        (req, res) =>
+        {
+            userController.verifyAccount(req, res);
+        });
+
     app.put(
         '/hospital/create',
         authenticateJWT,
         (req, res) =>
         {
             hospitalController.create(req, res);
+        });
+
+    app.post(
+        '/hospital/update',
+        authenticateJWT,
+        (req, res) =>
+        {
+            hospitalController.update(req, res);
         });
 
     app.get(
@@ -69,6 +84,14 @@ module.exports = function(app)
         (req, res) =>
         {
             patientController.create(req, res);
+        });
+
+    app.post(
+        '/patient/update',
+        authenticateJWT,
+        (req, res) =>
+        {
+            patientController.update(req, res);
         });
 
     app.get(
