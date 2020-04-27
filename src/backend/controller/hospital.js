@@ -77,8 +77,49 @@ const fetch = (req, res) =>
 };
 
 
+const update = (req, res) =>
+{
+    const user = common.fetchPayloadFromToken(req);
+
+    if(user.type !== "admin")
+    {
+        res.status(401).json({message: "Unathorized access"});
+        return;
+    }
+
+    let updates = {};
+
+    if(req.body.hasOwnProperty("units") && req.body.units !== null)
+        updates["units"] = req.body.units;
+
+    if(req.body.hasOwnProperty("address") && req.body.address !== null)
+        updates["address"] = req.body.address;
+
+    if(updates === {})
+    {
+        res.json({message: "Hospital updated successfully"});
+        return;
+    }
+
+    hospitalModel
+        .Hospital
+        .updateOne({id: req.body.id, user_id: user.id}, updates)
+        .then(
+            () =>
+            {
+                res.json({message: "Hospital updated successfully"});
+            })
+        .catch(
+            (err) =>
+            {
+                res.status(500).json(common.errorResponse(err));
+            });
+};
+
+
 module.exports =
     {
         create: create,
-        fetch: fetch
+        fetch: fetch,
+        update: update
     };

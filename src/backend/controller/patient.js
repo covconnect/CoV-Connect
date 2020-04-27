@@ -76,8 +76,39 @@ const fetch = (req, res) =>
 };
 
 
+const update = (req, res) =>
+{
+    const user = common.fetchPayloadFromToken(req);
+    let updates = {};
+
+    if(req.body.hasOwnProperty("unit") && req.body.unit !== null)
+        updates["unit"] = req.body.unit;
+
+    if(updates === {})
+    {
+        res.json({message: "Patient updated successfully"});
+        return;
+    }
+
+    patientModel
+        .Patient
+        .updateOne({id: req.body.id, user_id: user.id}, updates)
+        .then(
+            () =>
+            {
+                res.json({message: "Patient updated successfully"});
+            })
+        .catch(
+            (err) =>
+            {
+                res.status(500).json(common.errorResponse(err));
+            });
+};
+
+
 module.exports =
     {
         create: create,
-        fetch: fetch
+        fetch: fetch,
+        update: update
     };

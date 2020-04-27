@@ -55,6 +55,14 @@ module.exports = function(app)
             hospitalController.create(req, res);
         });
 
+    app.post(
+        '/hospital/update',
+        authenticateJWT,
+        (req, res) =>
+        {
+            hospitalController.update(req, res);
+        });
+
     app.get(
         '/hospital/fetch',
         authenticateJWT,
@@ -69,6 +77,14 @@ module.exports = function(app)
         (req, res) =>
         {
             patientController.create(req, res);
+        });
+
+    app.post(
+        '/patient/update',
+        authenticateJWT,
+        (req, res) =>
+        {
+            patientController.update(req, res);
         });
 
     app.get(
