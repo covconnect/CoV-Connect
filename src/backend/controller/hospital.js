@@ -17,6 +17,25 @@ async function create(req, res)
         return;
     }
 
+    let hospitalAdmin = userModel.User();
+    let password = short_uuid.generate();
+
+    try
+    {
+        hospitalAdmin.name = req.body.name;
+        hospitalAdmin.email = req.body.email;
+        hospitalAdmin.passhash = bcrypt.hashSync(password, 10);
+        hospitalAdmin.status = 1;
+        hospitalAdmin.type = "hospital_admin";
+
+        await hospitalAdmin.save();
+    }
+    catch(err)
+    {
+        res.status(500).json(common.errorResponse(err));
+        return;
+    }
+
     try
     {
         let hospital = hospitalModel.Hospital();
@@ -24,8 +43,10 @@ async function create(req, res)
         hospital.email = req.body.email;
         hospital.address = req.body.address;
         hospital.units = req.body.units;
+        hospital.user_id = hospitalAdmin.id;
 
         await hospital.save();
+        common.sendCredentialsToHospital(req.body.email, password);
     }
     catch(err)
     {
@@ -37,69 +58,47 @@ async function create(req, res)
         return;
     }
 
-    try
-    {
-        let password = short_uuid.generate();
-        let user = userModel.User();
-        user.name = req.body.name;
-        user.email = req.body.email;
-        user.passhash = bcrypt.hashSync(password, 10);
-        user.status = 1;
-        user.type = "hospital_admin";
-
-        await user.save();
-        common.sendCredentialsToHospital(req.body.email, password);
-    }
-    catch(err)
-    {
-        res.status(500).json(common.errorResponse(err));
-        return;
-    }
-
     res.json({message: "Hospital created successfully"});
 }
 
 
-const fetch = (req, res) =>
+async function fetch(req, res)
 {
-    hospitalModel
-        .Hospital
-        .find()
-        .then(
-            (result) =>
-            {
-                if(result)
-                {
-                    let hospitals = [];
+    try
+    {
+        let hospitals = await hospitalModel.Hospital.find();
 
-                    result.forEach(
-                        (hospital) =>
+        if(hospitals)
+        {
+            let hospital_list = [];
+
+            hospitals.forEach(
+                (hospital) =>
+                {
+                    hospital_list.push(
                         {
-                            hospitals.push(
-                                {
-                                    id: hospital.id,
-                                    name: hospital.name,
-                                    email: hospital.email,
-                                    address: hospital.address,
-                                    units: hospital.units})
-                        });
+                            id: hospital.id,
+                            name: hospital.name,
+                            email: hospital.email,
+                            address: hospital.address,
+                            units: hospital.units})
+                });
 
-                    res.json({hospitals: hospitals});
-                }
-                else
-                {
-                    res.status(404).json({message: "Hospital not found"});
-                }
-            })
-        .catch(
-            (err) =>
-            {
-                res.status(500).json(common.errorResponse(err));
-            });
-};
+            res.json({hospitals: hospital_list});
+        }
+        else
+        {
+            res.status(404).json({message: "Hospital not found"});
+        }
+    }
+    catch(err)
+    {
+        res.status(500).json(common.errorResponse(err));
+    }
+}
 
 
-const update = (req, res) =>
+async function update (req, res)
 {
     const user = common.fetchPayloadFromToken(req);
 
@@ -123,20 +122,19 @@ const update = (req, res) =>
         return;
     }
 
-    hospitalModel
-        .Hospital
-        .updateOne({id: req.body.id, user_id: user.id}, {$set: updates})
-        .then(
-            () =>
-            {
-                res.json({message: "Hospital updated successfully"});
-            })
-        .catch(
-            (err) =>
-            {
-                res.status(500).json(common.errorResponse(err));
-            });
-};
+    try
+    {
+        await hospitalModel
+            .Hospital
+            .updateOne({id: req.body.id, user_id: user.id}, {$set: updates});
+
+        res.json({message: "Hospital updated successfully"});
+    }
+    catch(err)
+    {
+        res.status(500).json(common.errorResponse(err));
+    }
+}
 
 
 module.exports =

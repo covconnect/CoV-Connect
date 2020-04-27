@@ -6,8 +6,8 @@ const Patient = new Schema(
     {
         name: {type: String, required: true},
         dob: {type: Date, required: true},
-        hospital_id: {type: String, required: true},
-        user_id: {type: String, required: true},
+        hospital_id: {type: Schema.Types.ObjectId, required: true},
+        user_id: {type: Schema.Types.ObjectId, required: true},
         unit: {type: String, required: true},
         status: {type: Number, default: 1}
     },

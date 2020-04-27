@@ -55,6 +55,7 @@ function SendMessage() {
 
     createMessage({
       patient_id: selectedPatient.value.patient_details.id,
+      hospital_id: selectedPatient.value.hospital_id,
       message: state.message,
     }).then((res) => {
       if(res.status === 200) {
