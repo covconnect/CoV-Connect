@@ -1,11 +1,14 @@
 import React, {useState} from 'react'
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import _startCase from 'lodash/startCase';
-import { useTable } from "react-table";
 import Select from "react-select";
+import Table from "../layout/Table";
+import {SET_PRINT_MESSAGES} from "../../actions/types";
+import {Link} from "react-router-dom";
 
 const DashboardHomeAdmin = () =>
 {
+    const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth)
     const messages = useSelector((state) => state.messages)
     let messages_by_unit = {};
@@ -38,39 +41,10 @@ const DashboardHomeAdmin = () =>
         { Header: "To", accessor: "to" },
         { Header: "Date of Birth", accessor: "dob" }];
 
-    const Table = ({ columns, data }) =>
+    function printMessages()
     {
-        const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-                  useTable({ columns, data });
-
-        return (
-            <table {...getTableProps()}>
-                <thead>
-                {headerGroups.map(headerGroup => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                            <th {...column.getHeaderProps()}>
-                                {column.render("Header")}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                {rows.map((row, i) => {
-                    prepareRow(row);
-                    return (
-                        <tr {...row.getRowProps()}>
-                            {row.cells.map(cell => {
-                                return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
-                            })}
-                        </tr>
-                    );
-                })}
-                </tbody>
-            </table>
-        );
-    };
+        dispatch({ type: SET_PRINT_MESSAGES, payload: selectedMessageList });
+    }
 
     return (
         <div>
@@ -92,12 +66,14 @@ const DashboardHomeAdmin = () =>
                             />
                         </div>
                         <div className="col s12 m4">
-                            <button
+                            <Link
                                 style={{ backgroundColor: '#0CC1E2', width: '253px', marginTop: "4%"}}
                                 className="btn waves-effect hoverable blue"
+                                to="/printMessages"
+                                onClick={printMessages}
                             >
                                 Print Messages
-                            </button>
+                            </Link>
                         </div>
                     </div>
                     <div className="white z-depth-1" style={{ padding: '20px 40px 30px 40px', marginTop: '36px'}}>

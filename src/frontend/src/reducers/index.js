@@ -4,6 +4,7 @@ import errorReducer from "./errorReducer";
 import messagesReducer from "./messagesReducer";
 import patientsReducer from "./patientsReducer";
 import hospitalsReducer from "./hospitalsReducer";
+import printReducer from "./printReducer";
 
 export default combineReducers({
    auth: authReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
    messages: messagesReducer,
    patients: patientsReducer,
    hospitals: hospitalsReducer,
+   printableMessages: printReducer
 });
