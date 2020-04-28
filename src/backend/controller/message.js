@@ -118,13 +118,15 @@ async function fetch(req, res)
                 messages.forEach(
                     message =>
                     {
+                        let dob = new Date(message.patient[0].dob);
+
                         message_list.push({
-                                              user_name   : message.user[0].name,
-                                              patient_name: message.patient[0].name,
-                                              patient_unit: message.patient[0].unit,
-                                              patient_dob : message.patient[0].dob,
+                                              from: message.user[0].name,
+                                              to: message.patient[0].name,
+                                              unit: message.patient[0].unit,
+                                              dob : dob.toDateString(),
                                               hospital_id : message.hospital_id,
-                                              message     : message.message
+                                              message: message.message
                                           });
                     });
 
