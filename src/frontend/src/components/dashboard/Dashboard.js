@@ -21,7 +21,8 @@ function Dashboard() {
   const { user } = useSelector(state => state.auth)
 
   useEffect(() => {
-    if (initialLoad) {
+    if (initialLoad)
+    {
       fetchHospitals().then(({ data }) => dispatch({ type: SET_HOSPITALS, payload: data.hospitals }))
       fetchMessages().then(({ data }) => dispatch({ type: SET_MESSAGES, payload: data.messages }))
       fetchPatients().then(({ data }) => dispatch({ type: SET_PATIENTS, payload: data.patients }))
@@ -77,16 +78,25 @@ function Dashboard() {
           <Sidebar items={sideBarItems} left />
         </div>
         <div className="container" style={{ paddingTop: 32 }}>
-          { user.type === 'admin' ? 
-            <Route exact path="/" component={DashboardHomeAdmin}/> :
-            <Route exact path="/" component={DashboardHome}/>
+          { user.type === 'admin' ?
+            <Route path="/hospitals" component={Hospitals}/> :
+            null
+          }
+          { user.type === "hospital_admin" ?
+            <div>
+              <Route exact path="/" component={DashboardHomeAdmin}/>
+              <Route path="/manageMessages" component={ManageMessages}/>
+            </div> :
+            null
+          }
+          { user.type === "user" ?
+            <Route exact path="/" component={DashboardHome}/> :
+            null
           }
           <div className="row w-100">
             <Route path="/sendMessage" component={sendMessage}/>
             <Route path="/sentMessage" component={SentMessage}/>
             <Route path="/aboutUs" component={aboutUs}/>
-            <Route path="/hospitals" component={Hospitals}/>
-            <Route path="/manageMessages" component={ManageMessages}/>
           </div>
         </div>
       </div>

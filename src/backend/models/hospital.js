@@ -8,6 +8,7 @@ const Hospital = new Schema(
         email: {type: String, required: true, unique: true},
         address: {type: String, required: true},
         units: {type: Array, default: []},
+        user_id: {type: Schema.Types.ObjectId, required: true},
         status: {type: Number, default: 1}
     },
     { timestamps: true }

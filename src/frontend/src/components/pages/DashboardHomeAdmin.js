@@ -14,10 +14,9 @@ const DashboardHomeAdmin = () => {
         return (
             messages.map(m => (
                 <tr style={{ borderColor: 'transparent', textIndent: '47px'}}>
-                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.room}</td>
-                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.unit}</td>
-                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.name}</td>
-                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.dob}</td>
+                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.patient_unit}</td>
+                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.user_name}</td>
+                    <td className="grey-text" style={{ fontWeight: 'normal'}}>{m.patient_dob}</td>
                     <td>
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <button 
@@ -70,7 +69,6 @@ const DashboardHomeAdmin = () => {
                     <table>
                         <thead>
                             <tr style={{ borderColor: '#009DBB', textIndent: '47px'}}>
-                                <th>Room</th>
                                 <th>Unit</th>
                                 <th>Name</th>
                                 <th>Date of Birth</th>
@@ -86,4 +84,5 @@ const DashboardHomeAdmin = () => {
         </>
     )
 }
+
 export default DashboardHomeAdmin

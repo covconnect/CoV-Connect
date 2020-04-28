@@ -53,10 +53,10 @@ function Sidebar({ items }) {
   const { type } = user;
   const allItems = useMemo(() => {
     switch (type) {
-      case 'admin': return [userSection, hospitalAdminSection, ...items, adminSection];
-      case 'hospital_admin': return [hospitalAdminSection, ...items];
+      case 'admin': return [adminSection];
+      case 'hospital_admin': return [hospitalAdminSection];
       case 'user':
-      default: return [userSection, ...items];
+      default: return [userSection];
     }
   }, [items, type]);
 
