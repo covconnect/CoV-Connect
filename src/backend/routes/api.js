@@ -125,4 +125,12 @@ module.exports = function(app)
         {
             messageController.deleteMessages(req, res);
         });
+
+    app.post(
+        '/message/mark_delivered',
+        authenticateJWT,
+        (req, res) =>
+        {
+            messageController.markDelivered(req, res);
+        });
 };

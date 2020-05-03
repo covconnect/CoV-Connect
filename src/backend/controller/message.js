@@ -118,13 +118,15 @@ async function fetch(req, res)
                 messages.forEach(
                     message =>
                     {
+                        let dob = new Date(message.patient[0].dob);
+
                         message_list.push({
-                                              user_name   : message.user[0].name,
-                                              patient_name: message.patient[0].name,
-                                              patient_unit: message.patient[0].unit,
-                                              patient_dob : message.patient[0].dob,
+                                              from: message.user[0].name,
+                                              to: message.patient[0].name,
+                                              unit: message.patient[0].unit,
+                                              dob : dob.toDateString(),
                                               hospital_id : message.hospital_id,
-                                              message     : message.message
+                                              message: message.message
                                           });
                     });
 
@@ -176,7 +178,21 @@ async function markDelivered(req, res)
         res.status(405).json({message: "Operation not allowed"});
     }
 
-    let result = await messageModel.Message.updateMany();
+    const filter = {id: {$in: []}};
+    const action = {$set: {status: 0}};
+
+    if(req.body.hasOwnProperty("ids"))
+        filter.id = {$in: req.body.ids};
+
+    try
+    {
+        await messageModel.Message.update(filter, action);
+        res.json({message: "Messages delivered successfully."});
+    }
+    catch(err)
+    {
+        res.status(500).json(common.errorResponse(err));
+    }
 }
 
 
@@ -184,5 +200,6 @@ module.exports =
     {
         create: create,
         fetch: fetch,
-        deleteMessages: deleteMessages
+        deleteMessages: deleteMessages,
+        markDelivered: markDelivered
     };

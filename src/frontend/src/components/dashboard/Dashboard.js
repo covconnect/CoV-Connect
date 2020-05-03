@@ -9,7 +9,7 @@ import aboutUs from "../pages/aboutUs";
 import DashboardHome from "../pages/DashboardHome";
 import DashboardHomeAdmin from '../pages/DashboardHomeAdmin';
 import Hospitals from "../pages/Hospitals";
-import ManageMessages from "../pages/ManageMessages";
+import PrintMessages from "../pages/PrintMessages";
 import { fetchHospitals } from '../../actions/hospitalActions';
 import { fetchMessages } from '../../actions/messageActions';
 import { fetchPatients } from '../../actions/patientActions';
@@ -79,13 +79,17 @@ function Dashboard() {
         </div>
         <div className="container" style={{ paddingTop: 32 }}>
           { user.type === 'admin' ?
-            <Route path="/hospitals" component={Hospitals}/> :
+            <div>
+              <Route exact path="/" component={Hospitals}/>
+              <Route path="/hospitals" component={Hospitals}/>
+            </div> :
             null
           }
           { user.type === "hospital_admin" ?
             <div>
               <Route exact path="/" component={DashboardHomeAdmin}/>
-              <Route path="/manageMessages" component={ManageMessages}/>
+              <Route path="/manageMessages" component={DashboardHomeAdmin}/>
+              <Route path="/printMessages" component={PrintMessages}/>
             </div> :
             null
           }
