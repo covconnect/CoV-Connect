@@ -1,39 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _map from 'lodash/map';
+
+
 import { createHospital, fetchHospitals } from '../../actions/hospitalActions';
 import { SET_HOSPITALS } from '../../actions/types';
 
-function Hospitals() {
+
+function Hospitals()
+{
   const dispatch = useDispatch();
+
   const [addingHospital, setAddingHospital] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [units, setUnits] = useState('');
   const [editing, setEditing] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const hospitals = useSelector(state => state.hospitals);
 
-  useEffect(() => {
-    setAddingHospital(false);
-    setAddress('');
-    setName('');
-    setEmail('');
-    setUnits('');
-    setEditing('');
-  }, [hospitals])
+  useEffect(
+      () =>
+      {
+          setAddingHospital(false);
+          setAddress('');
+          setName('');
+          setEmail('');
+          setUnits('');
+          setEditing('');
+      }, [hospitals])
 
   function saveNewHospital()
   {
-    createHospital({ name, email, address, units }).then(() => {
-      fetchHospitals().then(({ data }) => dispatch({
-                                                     type: SET_HOSPITALS,
-                                                     payload: data.hospitals,
-                                                   }));
-    }).catch(console.error);
+    createHospital({ name, email, address, units })
+        .then(
+            () =>
+            {
+                setSuccessMessage("Hospital registered successfully.")
+
+                fetchHospitals()
+                    .then(({ data }) => dispatch({type: SET_HOSPITALS, payload: data.hospitals}))
+                    .catch(err => setErrorMessage(err.message));
+            })
+        .catch(err => setErrorMessage(err.message));
   }
 
-  function enterEditMode(id, curAddress, curName, curEmail, curUnits) {
+  function enterEditMode(id, curAddress, curName, curEmail, curUnits)
+  {
     setAddress(curAddress);
     setName(curName);
     setEmail(curEmail);
@@ -41,7 +57,8 @@ function Hospitals() {
     setEditing(id);
   }
 
-  function cancelEditing() {
+  function cancelEditing()
+  {
     setAddress('');
     setName('');
     setEmail('');
@@ -49,12 +66,15 @@ function Hospitals() {
     setEditing('');
   }
 
-  function updateHospital() {
+  function updateHospital()
+  {
     // no endpoint yet to create a hospital
   }
 
-  function renderHospital({ id, name, address, email, units }) {
-    if (editing && editing === id) {
+  function renderHospital({ id, name, address, email, units })
+  {
+    if (editing && editing === id)
+    {
       return (
           <tr key={id}>
             <td>
@@ -63,16 +83,20 @@ function Hospitals() {
               </button>
             </td>
             <td>
-              <input onChange={(evt) => setName(evt.target.value)}  value={name} />
+              <input
+                  onChange={(evt) => setName(evt.target.value)}
+                  value={name} />
+            </td>
+            <td>{email}</td>
+            <td>
+              <input
+                  onChange={(evt) => setAddress(evt.target.value)}
+                  value={address} />
             </td>
             <td>
-              <input onChange={(evt) => setEmail(evt.target.value)}  value={email} />
-            </td>
-            <td>
-              <input onChange={(evt) => setAddress(evt.target.value)} value={address} />
-            </td>
-            <td>
-              <textarea onChange={(evt) => setUnits(evt.target.value)}  value={units.join('\n')} />
+              <textarea
+                  onChange={(evt) => setUnits(evt.target.value)}
+                  qvalue={units.join('\n')} />
             </td>
             <td>
               <button
@@ -111,11 +135,16 @@ function Hospitals() {
           <div className="row">
             <div className="col s12">
               <h2><b>Manage</b> Hospitals</h2>
-
+              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                <h5><b style={{ color: "green" }}>{successMessage}</b></h5>
+              </div>
+              <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                <h5><b style={{ color: "red" }}>{errorMessage}</b></h5>
+              </div>
               <table>
                 <thead>
                 <tr>
-                  <th></th>
+                  <th/>
                   <th>Name</th>
                   <th>Email</th>
                   <th>Address</th>
@@ -132,16 +161,28 @@ function Hospitals() {
                         </button>
                       </td>
                       <td>
-                        <input onChange={(evt) => setName(evt.target.value)} value={name} placeholder="Name"/>
+                        <input
+                            onChange={(evt) => setName(evt.target.value)}
+                            value={name}
+                            placeholder="Name"/>
                       </td>
                       <td>
-                        <input onChange={(evt) => setEmail(evt.target.value)} value={email} placeholder="Email"/>
+                        <input
+                            onChange={(evt) => setEmail(evt.target.value)}
+                            value={email}
+                            placeholder="Email"/>
                       </td>
                       <td>
-                        <input onChange={(evt) => setAddress(evt.target.value)} value={address} placeholder="Address"/>
+                        <input
+                            onChange={(evt) => setAddress(evt.target.value)}
+                            value={address}
+                            placeholder="Address"/>
                       </td>
                       <td>
-                        <textarea onChange={(evt) => setUnits(evt.target.value)} value={units} placeholder="Units. One on each line."/>
+                        <textarea
+                            onChange={(evt) => setUnits(evt.target.value)}
+                            value={units}
+                            placeholder="Units. One on each line."/>
                       </td>
                     </tr>
                 )}

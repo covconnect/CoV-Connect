@@ -54,6 +54,7 @@ const DashboardHomeAdmin = () =>
                     <div className="row">
                         <div className="col s12 m4" style={{ marginLeft: "20%" }}>
                             <Select
+                                id="hospital_unit"
                                 isSearchable={state.isSearchable}
                                 value={selectedUnit}
                                 onChange={

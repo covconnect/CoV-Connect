@@ -79,7 +79,10 @@ function Dashboard() {
         </div>
         <div className="container" style={{ paddingTop: 32 }}>
           { user.type === 'admin' ?
-            <Route path="/hospitals" component={Hospitals}/> :
+            <div>
+              <Route exact path="/" component={Hospitals}/>
+              <Route path="/hospitals" component={Hospitals}/>
+            </div> :
             null
           }
           { user.type === "hospital_admin" ?

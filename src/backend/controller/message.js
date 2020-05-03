@@ -178,7 +178,21 @@ async function markDelivered(req, res)
         res.status(405).json({message: "Operation not allowed"});
     }
 
-    let result = await messageModel.Message.updateMany();
+    const filter = {id: {$in: []}};
+    const action = {$set: {status: 0}};
+
+    if(req.body.hasOwnProperty("ids"))
+        filter.id = {$in: req.body.ids};
+
+    try
+    {
+        await messageModel.Message.update(filter, action);
+        res.json({message: "Messages delivered successfully."});
+    }
+    catch(err)
+    {
+        res.status(500).json(common.errorResponse(err));
+    }
 }
 
 
@@ -186,5 +200,6 @@ module.exports =
     {
         create: create,
         fetch: fetch,
-        deleteMessages: deleteMessages
+        deleteMessages: deleteMessages,
+        markDelivered: markDelivered
     };

@@ -6,14 +6,17 @@ import _map from 'lodash/map';
 import { createPatient, fetchPatients, } from '../../actions/patientActions';
 import { SET_PATIENTS } from '../../actions/types';
 
-function AddPatientForm() {
+function AddPatientForm()
+{
   const dispatch = useDispatch();
   const hospitals = useSelector(state => state.hospitals);
+
   const hospitalList = useMemo(() => _map(hospitals, hospital => ({
     value: hospital.id,
     label: hospital.name,
     units: _map(hospital.units, unit => ({value: unit, label: unit}))
   })), [hospitals]);
+
   const [state, setState] = useState({
     patient_name: "",
     dob_date: "",
@@ -27,49 +30,62 @@ function AddPatientForm() {
     focused: false,
     isSearchable: true
   });
+
   const { errors, selectedHospital, selectedUnit } = state;
 
-  function onChange(e) {
+  function onChange(e)
+  {
     setState({ ...state, [e.target.id]: e.target.value });
   }
 
-  function clearFields(error) {
-    if(!error) {
+  function clearFields(error)
+  {
+    if(!error)
+    {
       setState({ ...state, patient_name: "", dob_month: "", dob_date: "", dob_year: "", selectedHospital: null, errorMessage: "" })
-    } else {
+    }
+    else
+    {
       setState({ ...state, errorMessage: error, successMessage: "" })
     }
   }
 
-  function onSubmit(e) {
+  function onSubmit(e)
+  {
     e.preventDefault();
 
     const dob = new Date(parseInt(state.dob_year),
                          parseInt(state.dob_month),
                          parseInt(state.dob_date));
 
-    createPatient({
-      name: state.patient_name,
-      dob: dob.toDateString(),
-      hospital_id: state.selectedHospital.value,
-      unit: state.selectedUnit.value
-    }).then((res) => {
-      if(res.status === 200) {
-        setState({ ...state, successMessage: res.data.message});
-        clearFields(true);
+    createPatient(
+        {
+          name: state.patient_name,
+          dob: dob.toDateString(),
+          hospital_id: state.selectedHospital.value,
+          unit: state.selectedUnit.value})
+        .then(
+            (res) =>
+            {
+              if(res.status === 200)
+              {
+                setState({ ...state, successMessage: res.data.message});
+                clearFields(true);
 
-        fetchPatients().then(({ data }) => dispatch({
-          type: SET_PATIENTS,
-          payload: data.patients,
-        }));
-      } else {
-        setState({ ...state, errorMessage: res.data.message})
-        clearFields(false);
-      }
-    }).catch((err) => {
-      setState({ ...state, errorMessage: err.message});
-      clearFields(false);
-    });
+                fetchPatients()
+                    .then(({ data }) => dispatch({type: SET_PATIENTS, payload: data.patients,}))
+                    .catch(err => clearFields(err.message));
+              }
+              else
+              {
+                clearFields(res.data.message);
+              }
+            })
+        .catch(
+            (err) =>
+            {
+              clearFields(err.message);
+            });
   }
 
   return (
