@@ -84,9 +84,7 @@ function SendMessage() {
           <div className="col s12">
             <h4 className="grey-text text-darken-1">Send a Message</h4>
             <p className="grey-text">
-              Your note will be printed onto labels and affixed to patient's food containers.
-              <br />
-              Tell them how much you care!
+              Tell your loved ones how much you care!
             </p>
 
             <h5 className="blue-text"><b>Patient</b></h5>
