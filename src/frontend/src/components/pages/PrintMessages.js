@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 const PrintMessages = () =>
 {
     const messages = useSelector((state) => state.printableMessages)
+    let message_list = [];
     let print_list = [];
 
     messages.forEach(
@@ -24,13 +25,18 @@ const PrintMessages = () =>
                         "\nPatient DOB: " + message.dob +
                         "\nMessage: " + message.message;
 
-            message.from = "From: " + message.from;
-            message.to = "To: " + message.to;
-            message.dob = "DOB: " + message.dob;
-            message.message = "Message: " + message.message;
+            message_list.push(
+                {
+                    unit: "Unit: " + message.unit,
+                    from   : "From: " + message.from,
+                    to     : "To: " + message.to,
+                    dob    : "DOB: " + message.dob,
+                    message: "Message: " + message.message
+                });
         });
 
     const columns = [
+        { accessor: "unit" },
         { accessor: "from" },
         { accessor: "to" },
         { accessor: "dob" },
@@ -45,7 +51,7 @@ const PrintMessages = () =>
         <div className="center-align">
             <Link to="/">Back</Link>&nbsp;
             <button onClick={print}>Print</button>
-            <Table columns={columns} data={messages}/>
+            <Table columns={columns} data={message_list}/>
         </div>
     )
 }

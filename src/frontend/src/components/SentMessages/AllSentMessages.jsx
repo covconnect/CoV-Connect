@@ -34,10 +34,9 @@ function AllSentMessages() {
       <div className="card p-12">
         <div className="row">
           <div className="col s12">
-            <h2><b>Hello</b> World</h2>
+            <h2><b>Sent</b> Messages</h2>
             <p className="grey-text fz-24">
               Keep track of the delivery status of all your sent messages.
-              Click on any row to view message details.
             </p>
           </div>
         </div>
